@@ -41,4 +41,24 @@ class TaskCrudTest extends TestCase
         $response->assertJsonFragment(['title' => 'Test Task']);
         $this->assertDatabaseHas('tasks', $taskData);
     }
+
+    /**
+     * Test that a user can view all stored tasks.
+     * 
+     * @return void
+     */
+    public function test_user_can_show_all_tasks(): void
+    {
+        // Arrange: Create sample tasks
+        $tasks = \App\Models\Task::factory()->count(3)->create();
+
+        // Act: Send GET request to fetch all tasks
+        $response = $this->get('/api/tasks');
+
+        // Assert: Check response status and content
+        $response->assertStatus(200);
+        $response->assertJsonFragment(['title' => $tasks[0]->title]);
+        $response->assertJsonFragment(['description' => $tasks[1]->description]);
+        $response->assertJsonFragment(['priority' => $tasks[2]->priority]);
+    }
 }
