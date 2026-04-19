@@ -8,6 +8,19 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
+
+    /**
+     * Function to view all stored tasks in storage and return a JSON response
+     * with status 200 OK.
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index(): JsonResponse
+    {
+        $tasks = Task::all();
+        return response()->json($tasks, 200);
+    }
+
     /**
      * Function to store a newly created task in storage and return a JSON response
      * with status 201 Created.

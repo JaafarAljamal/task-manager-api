@@ -12,3 +12,8 @@ Route::get('/user', function (Request $request) {
  * API Route: Create a new task
  */
 Route::post('/task', [TaskController::class, 'store']);
+
+/**
+ * API Route: View all stored tasks
+ */
+Route::get('/tasks', [TaskController::class, 'index']);
