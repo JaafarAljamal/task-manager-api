@@ -17,3 +17,8 @@ Route::post('/task', [TaskController::class, 'store']);
  * API Route: View all stored tasks
  */
 Route::get('/tasks', [TaskController::class, 'index']);
+
+/**
+ * API Route: Update a task
+ */
+Route::put('/task/{id}', [TaskController::class, 'update']);
