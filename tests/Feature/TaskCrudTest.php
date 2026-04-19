@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -60,5 +61,35 @@ class TaskCrudTest extends TestCase
         $response->assertJsonFragment(['title' => $tasks[0]->title]);
         $response->assertJsonFragment(['description' => $tasks[1]->description]);
         $response->assertJsonFragment(['priority' => $tasks[2]->priority]);
+    }
+
+    /**
+     * Test that a user can update a task by id.
+     * 
+     * @return void
+     */
+    public function test_user_can_update_a_task(): void
+    {
+        // Arrange: Create a sample task
+        $task = Task::factory()->create([
+            'title' => 'Old Title',
+            'description' => 'Old description',
+            'priority' => 1,
+        ]);
+
+        // Create new data
+        $updateData = [
+            'title' => 'New Title',
+            'description' => 'New description',
+            'priority' => 2,
+        ];
+
+        // Act: Send PUT request with new data
+        $response = $this->put("/api/task/{$task->id}", $updateData);
+
+        // Assert: Check response status, content, and the task in database
+        $response->assertStatus(200);
+        $response->assertJsonFragment(['title' => 'New Title']);
+        $this->assertDatabaseHas('tasks', $updateData);
     }
 }
