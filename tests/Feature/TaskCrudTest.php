@@ -92,4 +92,29 @@ class TaskCrudTest extends TestCase
         $response->assertJsonFragment(['title' => 'New Title']);
         $this->assertDatabaseHas('tasks', $updateData);
     }
+
+
+    /**
+     * Test that a user can view one task by id.
+     */
+    public function test_user_can_show_a_task(): void
+    {
+        // Arrange: Create a sample task
+        $task = Task::factory()->create([
+            'title' => 'Sample Title',
+            'description' => 'Sample description',
+            'priority' => 1,
+        ]);
+
+        // Act: Send GET method to fitch a task
+        $response = $this->get("/api/task/{$task->id}");
+
+        // Assert: Check response status and content
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            'title' => 'Sample Title',
+            'description' => 'Sample description',
+            'priority' => 1,
+        ]);
+    }
 }
