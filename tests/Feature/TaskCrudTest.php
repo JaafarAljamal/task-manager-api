@@ -96,6 +96,8 @@ class TaskCrudTest extends TestCase
 
     /**
      * Test that a user can view one task by id.
+     * 
+     * @return void
      */
     public function test_user_can_show_a_task(): void
     {
@@ -106,7 +108,7 @@ class TaskCrudTest extends TestCase
             'priority' => 1,
         ]);
 
-        // Act: Send GET method to fitch a task
+        // Act: Send GET method to fetch a task
         $response = $this->get("/api/task/{$task->id}");
 
         // Assert: Check response status and content
@@ -116,5 +118,24 @@ class TaskCrudTest extends TestCase
             'description' => 'Sample description',
             'priority' => 1,
         ]);
+    }
+
+    /**
+     * Test that a user can delete a task by id.
+     * 
+     * @return void
+     */
+    public function test_user_can_delete_a_task(): void
+    {
+        // Arrange: Create a sample task
+        $task = Task::factory()->create();
+
+        // Act: Send DELETE request to delete a task by id
+        $response = $this->delete("/api/task/{$task->id}");
+
+        // Assert: Check response status and database content
+        $response->assertStatus(204);
+        $this->assertDatabaseMissing('tasks', ['id' => $task->id]);
+        $this->assertEmpty($response->getContent());
     }
 }
