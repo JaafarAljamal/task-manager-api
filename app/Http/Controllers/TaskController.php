@@ -66,4 +66,15 @@ class TaskController extends Controller
         $task = Task::findOrFail($id);
         return response()->json($task, 200);
     }
+
+    /**
+     * Function to delete a stored task in storage by id and return 
+     * a JSON response with status 204 No Content .
+     */
+    public function destroy($id): JsonResponse
+    {
+        $task = Task::findOrFail($id);
+        $task->delete();
+        return response()->json(null, 204);
+    }
 }

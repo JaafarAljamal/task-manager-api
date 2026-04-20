@@ -27,3 +27,8 @@ Route::put('/task/{id}', [TaskController::class, 'update']);
  * API Route: View a task
  */
 Route::get('/task/{id}', [TaskController::class, 'show']);
+
+/**
+ * API Route: Delete a task
+ */
+Route::delete('/task/{id}', [TaskController::class, 'destroy']);
