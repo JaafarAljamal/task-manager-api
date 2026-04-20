@@ -53,4 +53,17 @@ class TaskController extends Controller
         $task->update($request->all());
         return response()->json($task, 200);
     }
+
+    /**
+     * Function to view a stored task in storage by id and return 
+     * a JSON response with status 200 OK.
+     * 
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show($id): JsonResponse
+    {
+        $task = Task::findOrFail($id);
+        return response()->json($task, 200);
+    }
 }
