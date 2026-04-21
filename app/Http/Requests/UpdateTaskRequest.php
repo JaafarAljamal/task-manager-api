@@ -28,4 +28,19 @@ class UpdateTaskRequest extends FormRequest
             'priority' => 'sometimes|integer|between:1,5',
         ];
     }
+
+    /**
+     * Function to customize validation messages.
+     * 
+     * @return array
+     */
+    public function messages(): array
+    {
+        return [
+            'title.max' => 'The entered title exceeds the allowed length, which is 40 characters',
+            'priority.integer' => 'Priority must be an integer between 1 and 5',
+            'priority.min' => 'Priority level must be from 1 to 5',
+            'priority.max' => 'Priority level must be from 1 to 5',
+        ];
+    }
 }
