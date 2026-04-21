@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Task;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
@@ -25,17 +26,13 @@ class TaskController extends Controller
      * Function to store a newly created task in storage and return a JSON response
      * with status 201 Created.
      * 
-     * @param \Illuminate\Http\Request $request
+     * @param App\Http\Requests\StoreTaskRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreTaskRequest $request): JsonResponse
     {
-        $task = Task::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'priority' => $request->priority,
-        ]);
-
+        $validated = $request->validated();
+        $task = Task::create($validated);
         return response()->json($task, 201);
     }
 
@@ -43,14 +40,15 @@ class TaskController extends Controller
      * Function to update a stored task in storage by id and return 
      * a JSON response with status 200 OK.
      * 
-     * @param \Illuminate\Http\Request $request
+     * @param App\Http\Requests\UpdateTaskRequest $request
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id): JsonResponse
+    public function update(UpdateTaskRequest $request, $id): JsonResponse
     {
         $task = Task::findOrFail($id);
-        $task->updateOrFail($request->only('title', 'description', 'priority'));
+        $validated = $request->validated();
+        $task->updateOrFail($validated);
         return response()->json($task, 200);
     }
 
