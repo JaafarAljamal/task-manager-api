@@ -52,4 +52,26 @@ class UserProfileRelationshipTest extends TestCase
             'phone' => '123456789'
         ]);
     }
+
+    /**
+     * Test that a user can view the associated profile.
+     * 
+     * @return void
+     */
+    public function test_user_can_view_associated_profile(): void
+    {
+        // Arrange: Create a user in database
+        $user = User::factory()->create();
+        $profile = Profile::create([
+            'user_id' => $user->id,
+            'phone' => '123456789'
+        ]);
+
+        // Act: Send Get request to fetch the user's associated profile
+        $response = $this->get("/api/profile/{$user->id}");
+
+        // Assert: Check the response status and content
+        $response->assertStatus(200);
+        $response->assertJsonFragment(['phone' => $profile->phone]);
+    }
 }
