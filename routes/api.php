@@ -38,3 +38,8 @@ Route::delete('/task/{id}', [TaskController::class, 'destroy']);
  * API Route: Create a new profile
  */
 Route::post('/profile', [ProfileController::class, 'store']);
+
+/**
+ * API Route: View an associated profile
+ */
+Route::get('/profile/{user_id}', [ProfileController::class, 'show']);
