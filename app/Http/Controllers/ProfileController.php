@@ -12,8 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class ProfileController extends Controller
 {
     /**
-     * Function to store a newly created profile and return a JSON response
-     * with status 201 Created.
+     * Store a newly created profile and return a JSON response with status 201 Created.
      * 
      * @param App\Http\Requests\StoreProfileRequest $request
      * @return \Illuminate\Http\JsonResponse
@@ -26,10 +25,9 @@ class ProfileController extends Controller
     }
 
     /**
-     * Function to view the user's profile by user ID and return 
-     * a JSON response with status 200 OK.
+     * Display the user's profile by user ID and return a JSON response with status 200 OK.
      * 
-     * @param $user_id
+     * @param int $user_id
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($user_id): JsonResponse
@@ -38,15 +36,14 @@ class ProfileController extends Controller
         $profile = $user->profile;
 
         if (! $profile) {
-            return response()->json(['message' => 'Profile not found', 404]);
+            return response()->json(['message' => 'Profile not found'], 404);
         }
 
         return response()->json($profile, 200);
     }
 
     /**
-     * Update the user's profile by user ID and return 
-     * a JSON response with status 200 OK.
+     * Update the user's profile by user ID and return a JSON response with status 200 OK.
      * 
      * @param \Illuminate\Http\Request $request
      * @param int $user_id

@@ -11,8 +11,7 @@ class TaskController extends Controller
 {
 
     /**
-     * Function to view all stored tasks in storage and return a JSON response
-     * with status 200 OK.
+     * Display all stored tasks in storage and return a JSON response with status 200 OK.
      * 
      * @return \Illuminate\Http\JsonResponse
      */
@@ -37,11 +36,10 @@ class TaskController extends Controller
     }
 
     /**
-     * Function to update a stored task in storage by id and return 
-     * a JSON response with status 200 OK.
+     * Update a stored task in storage by ID and return a JSON response with status 200 OK.
      * 
      * @param App\Http\Requests\UpdateTaskRequest $request
-     * @param $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(UpdateTaskRequest $request, $id): JsonResponse
@@ -53,10 +51,9 @@ class TaskController extends Controller
     }
 
     /**
-     * Function to view a stored task in storage by id and return 
-     * a JSON response with status 200 OK.
+     * Display a stored task in storage by ID and return a JSON response with status 200 OK.
      * 
-     * @param $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id): JsonResponse
@@ -66,8 +63,11 @@ class TaskController extends Controller
     }
 
     /**
-     * Function to delete a stored task in storage by id and return 
-     * a JSON response with status 204 No Content .
+     * Delete a stored task in storage by ID and return a JSON response
+     * with status 204 No Content.
+     * 
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id): JsonResponse
     {
