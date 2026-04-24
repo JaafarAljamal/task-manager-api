@@ -43,4 +43,29 @@ class ProfileController extends Controller
 
         return response()->json($profile, 200);
     }
+
+    /**
+     * Update the user's profile by user ID and return 
+     * a JSON response with status 200 OK.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $user_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request, $user_id): JsonResponse
+    {
+        $profile = User::findOrFail($user_id)->profile;
+
+        if (! $profile) {
+            return response()->json(['message' => 'Profile not found'], 404);
+        }
+
+        $profile->update($request->only([
+            'phone',
+            'address',
+            'date_of_birth',
+            'bio'
+        ]));
+        return response()->json($profile, 200);
+    }
 }

@@ -43,3 +43,8 @@ Route::post('/profile', [ProfileController::class, 'store']);
  * API Route: View an associated profile
  */
 Route::get('/profile/{user_id}', [ProfileController::class, 'show']);
+
+/**
+ * API Route: Update an associated profile
+ */
+Route::put('/profile/{user_id}', [ProfileController::class, 'update']);
