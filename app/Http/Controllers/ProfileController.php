@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProfileRequest;
+use App\Http\Requests\UpdateProfileRequest;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
@@ -45,11 +44,11 @@ class ProfileController extends Controller
     /**
      * Update the user's profile by user ID and return a JSON response with status 200 OK.
      * 
-     * @param \Illuminate\Http\Request $request
+     * @param App\Http\Requests\UpdateProfileRequest $request
      * @param int $user_id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $user_id): JsonResponse
+    public function update(UpdateProfileRequest $request, $user_id): JsonResponse
     {
         $profile = User::findOrFail($user_id)->profile;
 
@@ -57,12 +56,8 @@ class ProfileController extends Controller
             return response()->json(['message' => 'Profile not found'], 404);
         }
 
-        $profile->update($request->only([
-            'phone',
-            'address',
-            'date_of_birth',
-            'bio'
-        ]));
+        $data = $request->validated();
+        $profile->updateOrFail($data);
         return response()->json($profile, 200);
     }
 }
