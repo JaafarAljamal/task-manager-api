@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class TaskCrudTest extends TestCase
@@ -137,5 +137,43 @@ class TaskCrudTest extends TestCase
         $response->assertStatus(204);
         $this->assertDatabaseMissing('tasks', ['id' => $task->id]);
         $this->assertEmpty($response->getContent());
+    }
+
+    /**
+     * Test the ability to view all user-associated tasks using the user ID.
+     * 
+     * @return void
+     */
+    public function test_user_can_view_all_associated_tasks(): void
+    {
+        // Arrange: Create a sample user and some associated tasks
+        $user = User::factory()->create();
+        $task1 = Task::create([
+            'user_id' => $user->id,
+            'title' => 'First Task',
+            'description' => 'This description for the first task',
+            'priority' => 1
+        ]);
+        $task2 = Task::create([
+            'user_id' => $user->id,
+            'title' => 'Second Task',
+            'description' => 'This description for the second task',
+            'priority' => 2
+        ]);
+        $task3 = Task::create([
+            'user_id' => $user->id,
+            'title' => 'Third Task',
+            'description' => 'This description for the third task',
+            'priority' => 3
+        ]);
+
+        // Act: Send GET request to fetch all the user-associated tasks
+        $response = $this->get("/api/user/{$user->id}/tasks");
+
+        // Assert: Check response status and content
+        $response->assertStatus(200);
+        $response->assertJsonFragment(['title' => 'First Task']);
+        $response->assertJsonFragment(['title' => 'Second Task']);
+        $response->assertJsonFragment(['title' => 'Third Task']);
     }
 }
