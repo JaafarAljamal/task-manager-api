@@ -48,3 +48,8 @@ Route::get('/profile/{user_id}', [ProfileController::class, 'show']);
  * API Route: Update an associated profile
  */
 Route::put('/profile/{user_id}', [ProfileController::class, 'update']);
+
+/**
+ * API Route: View all the user-associated tasks
+ */
+Route::get('user/{user_id}/tasks', [TaskController::class, 'userTasks']);

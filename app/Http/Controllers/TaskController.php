@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 
 class TaskController extends Controller
@@ -74,5 +75,18 @@ class TaskController extends Controller
         $task = Task::findOrFail($id);
         $task->delete();
         return response()->json(null, 204);
+    }
+
+    /**
+     * Display the associated-user tasks in storage by user ID and return a JSON response
+     * with status 20 OK.
+     * 
+     * @param int $user_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function userTasks($user_id): JsonResponse
+    {
+        $tasks = User::findOrFail($user_id)->tasks;
+        return response()->json($tasks, 200);
     }
 }
