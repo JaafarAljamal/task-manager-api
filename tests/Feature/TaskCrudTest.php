@@ -178,4 +178,32 @@ class TaskCrudTest extends TestCase
         $response->assertJsonFragment(['title' => 'Second Task']);
         $response->assertJsonFragment(['title' => 'Third Task']);
     }
+
+    /**
+     * Test the ability to display the task-associated user by Task ID.
+     * 
+     * @return void
+     */
+    public function test_user_can_view_the_user_associated_with_task(): void
+    {
+        // Arrange: Create a user and an associated task
+        $user = User::create([
+            'name' => 'Jaafar',
+            'email' => 'jaafar@example.com',
+            'password' => bcrypt('123123123')
+        ]);
+
+        $task = Task::create([
+            'user_id' => $user->id,
+            'title' => 'Task Title',
+            'priority' => 1
+        ]);
+
+        // Act: Send GET request to fetch the task-associated user
+        $response = $this->get("/api/task/{$task->id}/user");
+
+        // Assert: Check response status and content
+        $response->assertStatus(200);
+        $response->assertJsonFragment(['name' => 'Jaafar']);
+    }
 }
