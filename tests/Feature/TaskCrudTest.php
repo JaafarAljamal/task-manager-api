@@ -27,8 +27,10 @@ class TaskCrudTest extends TestCase
      */
     public function test_user_can_create_a_task(): void
     {
-        // Arrange: Prepare valid task data
+        // Arrange: Create a sample user and Prepare valid task data
+        $user = User::factory()->create();
         $taskData =  [
+            'user_id' => $user->id,
             'title' => 'Test Task',
             'description' => 'This is a test description',
             'priority' => 1,
