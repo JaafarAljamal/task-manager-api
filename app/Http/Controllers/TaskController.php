@@ -116,4 +116,18 @@ class TaskController extends Controller
         $task->categories()->attach($request->category_id);
         return response()->json(['message' => 'Category(s) attached successfully'], 200);
     }
+
+    /**
+     * Display the task-attached categories for the given task ID and return 
+     * a JSON response with status 200 OK.
+     * 
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getTaskCategories($id): JsonResponse
+    {
+        $task = Task::findOrFail($id);
+        $categories = $task->categories;
+        return response()->json($categories, 200);
+    }
 }

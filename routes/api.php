@@ -63,3 +63,8 @@ Route::get('task/{id}/user', [TaskController::class, 'taskUser']);
  * API Route: Add categories to a task
  */
 Route::post('/task/{id}/categories', [TaskController::class, 'attachCategory']);
+
+/**
+ * API Route: View the categories-attached to a task
+ */
+Route::get('/task/{id}/categories', [TaskController::class, 'getTaskCategories']);
