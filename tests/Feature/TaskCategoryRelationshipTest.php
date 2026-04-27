@@ -40,7 +40,7 @@ class TaskCategoryRelationshipTest extends TestCase
 
         // Assert: Check response status and content and database content
         $response->assertStatus(200);
-        $response->assertJsonFragment(['message' => 'Category attached successfully']);
+        $response->assertJsonFragment(['message' => 'Category(s) attached successfully']);
         $this->assertDatabaseHas('task_category', [
             'task_id' => $task->id,
             'category_id' => $category->id
@@ -65,5 +65,25 @@ class TaskCategoryRelationshipTest extends TestCase
         // Assert: Check response status and content
         $response->assertStatus(200);
         $response->assertJsonFragment(['name' => 'Category_1']);
+    }
+
+    /**
+     * Test that the user can display the tasks for the given category by the category ID.
+     * 
+     * @return void
+     */
+    public function test_user_can_view_tasks_for_a_specific_category(): void
+    {
+        // Arrange: Create a category-attached task
+        $task = Task::factory()->create(['title' => 'Task Title']);
+        $category = Category::create(['name' => 'Category_1']);
+        $task->categories()->attach($category->id);
+
+        // Act: Send GET request to fetch the related tasks
+        $response = $this->get("/api/category/{$category->id}/tasks");
+
+        // Assert: Check response status and content
+        $response->assertStatus(200);
+        $response->assertJsonFragment(['title' => 'Task Title']);
     }
 }
