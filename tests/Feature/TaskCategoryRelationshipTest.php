@@ -46,4 +46,24 @@ class TaskCategoryRelationshipTest extends TestCase
             'category_id' => $category->id
         ]);
     }
+
+    /**
+     * Test that the user can display the attached categories to the given task by the task ID.
+     * 
+     * @return void
+     */
+    public function test_user_can_view_the_attached_categories_of_a_task(): void
+    {
+        // Arrange: Create a category-attached task
+        $task = Task::factory()->create();
+        $category = Category::create(['name' => 'Category_1']);
+        $task->categories()->attach($category->id);
+
+        // Act: Send a GET request to fetch the categories attached to the task by its ID
+        $response = $this->get("/api/task/{$task->id}/categories");
+
+        // Assert: Check response status and content
+        $response->assertStatus(200);
+        $response->assertJsonFragment(['name' => 'Category_1']);
+    }
 }
