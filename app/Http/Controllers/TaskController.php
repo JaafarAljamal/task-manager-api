@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
@@ -91,7 +92,7 @@ class TaskController extends Controller
     }
 
     /**
-     * Display task-associated user by task IK and return a JSON response with status 200 OK.
+     * Display task-associated user by task ID and return a JSON response with status 200 OK.
      * 
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
@@ -100,5 +101,19 @@ class TaskController extends Controller
     {
         $user = Task::findOrFail($id)->user;
         return response()->json($user, 200);
+    }
+
+    /**
+     * Attach categories to a task by task ID and return a JSON response with status 200 OK.
+     * 
+     * @param Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function attachCategory(Request $request, $id): JsonResponse
+    {
+        $task = Task::findOrFail($id);
+        $task->categories()->attach($request->category_id);
+        return response()->json(['message' => 'Category(s) attached successfully'], 200);
     }
 }
