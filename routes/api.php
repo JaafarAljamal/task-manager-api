@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Http\Request;
@@ -68,3 +69,8 @@ Route::post('/task/{id}/categories', [TaskController::class, 'attachCategory']);
  * API Route: View the categories-attached to a task
  */
 Route::get('/task/{id}/categories', [TaskController::class, 'getTaskCategories']);
+
+/**
+ * API Route: View the tasks associated to a category
+ */
+Route::get('/category/{id}/tasks', [CategoryController::class, 'getCategoryTasks']);
