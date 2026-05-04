@@ -22,6 +22,11 @@ Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 
 /**
+ * API Route: User logout
+ */
+Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
+
+/**
  * API Route: Create a new task
  */
 Route::post('/task', [TaskController::class, 'store']);

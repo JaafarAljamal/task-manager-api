@@ -62,4 +62,17 @@ class UserController extends Controller
             'token_type' => 'Bearer'
         ]);
     }
+
+    /**
+     * Handle the logout request by deleting the user's associated Token.
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function logout(Request $request): JsonResponse
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json(['message' => 'Logout Successful!'], 200);
+    }
 }
