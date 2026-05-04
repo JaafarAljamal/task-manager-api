@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -32,5 +33,33 @@ class UserController extends Controller
             'message' => 'User Created Successfully',
             'user' => $user
         ], 201);
+    }
+
+    /**
+     * Handle the incoming login requests and create a Token on success.
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function login(Request $request): JsonResponse
+    {
+        $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string'
+        ]);
+
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            return response()->json(['message' => 'Invalid Email or Password!'], 401);
+        }
+
+        $user = User::where('email', $request->email)->firstOrFail();
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Login Successful',
+            'user' => $user,
+            'token' => $token,
+            'token_type' => 'Bearer'
+        ]);
     }
 }

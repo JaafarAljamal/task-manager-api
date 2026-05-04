@@ -17,6 +17,11 @@ Route::get('/user', function (Request $request) {
 Route::post('/register', [UserController::class, 'register']);
 
 /**
+ * API Route: User login
+ */
+Route::post('/login', [UserController::class, 'login']);
+
+/**
  * API Route: Create a new task
  */
 Route::post('/task', [TaskController::class, 'store']);
