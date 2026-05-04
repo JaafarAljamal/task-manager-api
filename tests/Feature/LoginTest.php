@@ -48,4 +48,32 @@ class LoginTest extends TestCase
         $this->assertEquals('Bearer', $response->json('token_type'));
         $this->assertAuthenticatedAs($user);
     }
+
+    /**
+     * Test: Ensure that a user cannot log in with an incorrect password.
+     * 
+     * @return void
+     */
+    public function test_user_cannot_login_with_incorrect_credentials(): void
+    {
+        // Arrange: Create a valid user and incorrect login credentials
+        $user = User::create([
+            'name' => 'WrongPassUser',
+            'email' => 'wrong@example.com',
+            'password' => bcrypt('correct123')
+        ]);
+
+        $incorrectCredintials = [
+            'email' => 'wrong@example.com',
+            'password' => 'wrongPassword'
+        ];
+
+        // Act:  Send a POST request to attempt to login
+        $response = $this->post('/api/login', $incorrectCredintials);
+
+        // Assert: Check response status and content
+        $response->assertStatus(401);
+        $response->assertJsonFragment(['message' => 'Invalid Email or Password!']);
+        $this->assertGuest();
+    }
 }
