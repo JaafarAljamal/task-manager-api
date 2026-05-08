@@ -43,13 +43,17 @@ class TaskController extends Controller
     /**
      * Update a stored task in storage by ID and return a JSON response with status 200 OK.
      * 
-     * @param App\Http\Requests\UpdateTaskRequest $request
+     * @param UpdateTaskRequest $request
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(UpdateTaskRequest $request, $id): JsonResponse
     {
+        $user_id = Auth::user()->id;
         $task = Task::findOrFail($id);
+        if ($task->user_id != $user_id) {
+            return response()->json(['message' => 'You cannot update this task!'], 403);
+        }
         $validated = $request->validated();
         $task->updateOrFail($validated);
         return response()->json($task, 200);

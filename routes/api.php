@@ -26,11 +26,16 @@ Route::post('/login', [UserController::class, 'login']);
  */
 Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum'])->group(function () {
     /**
      * API Route: Create a new task
      */
     Route::post('/task', [TaskController::class, 'store']);
+
+    /**
+     * API Route: Update a task
+     */
+    Route::put('/task/{id}', [TaskController::class, 'update']);
 });
 
 
@@ -39,10 +44,6 @@ Route::middleware('auth:sanctum')->group(function () {
  */
 Route::get('/tasks', [TaskController::class, 'index']);
 
-/**
- * API Route: Update a task
- */
-Route::put('/task/{id}', [TaskController::class, 'update']);
 
 /**
  * API Route: View a task
