@@ -30,19 +30,23 @@ class TaskCrudTest extends TestCase
         // Arrange: Create a sample user and Prepare valid task data
         $user = User::factory()->create();
         $taskData =  [
-            'user_id' => $user->id,
             'title' => 'Test Task',
             'description' => 'This is a test description',
             'priority' => 1,
         ];
 
-        // Act: Send POST request to create a new task
-        $response = $this->post('/api/task', $taskData);
+        // Act: Send a POST request to create a new task by an authenticated user
+        $response = $this->actingAs($user)->post('/api/task', $taskData);
 
-        // Assert: Check response status and content
+        // Assert: Check response status and content and database
         $response->assertStatus(201);
         $response->assertJsonFragment(['title' => 'Test Task']);
-        $this->assertDatabaseHas('tasks', $taskData);
+        $this->assertDatabaseHas('tasks', [
+            'user_id' => $user->id,
+            'title' => 'Test Task',
+            'description' => 'This is a test description',
+            'priority' => 1
+        ]);
     }
 
     /**
