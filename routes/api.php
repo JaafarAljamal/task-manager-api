@@ -26,10 +26,13 @@ Route::post('/login', [UserController::class, 'login']);
  */
 Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
 
-/**
- * API Route: Create a new task
- */
-Route::post('/task', [TaskController::class, 'store']);
+Route::middleware('auth:sanctum')->group(function () {
+    /**
+     * API Route: Create a new task
+     */
+    Route::post('/task', [TaskController::class, 'store']);
+});
+
 
 /**
  * API Route: View all stored tasks

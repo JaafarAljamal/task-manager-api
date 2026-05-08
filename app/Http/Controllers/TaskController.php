@@ -8,6 +8,7 @@ use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -27,12 +28,14 @@ class TaskController extends Controller
      * Function to store a newly created task in storage and return a JSON response
      * with status 201 Created.
      * 
-     * @param App\Http\Requests\StoreTaskRequest $request
+     * @param StoreTaskRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(StoreTaskRequest $request): JsonResponse
     {
+        $user_id = Auth::user()->id;
         $validated = $request->validated();
+        $validated['user_id'] = $user_id;
         $task = Task::create($validated);
         return response()->json($task, 201);
     }
