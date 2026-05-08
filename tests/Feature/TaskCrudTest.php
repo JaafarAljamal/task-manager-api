@@ -76,11 +76,13 @@ class TaskCrudTest extends TestCase
      */
     public function test_user_can_update_a_task(): void
     {
-        // Arrange: Create a sample task
+        // Arrange: Create a sample user and an associated task
+        $user = User::factory()->create();
         $task = Task::factory()->create([
             'title' => 'Old Title',
             'description' => 'Old description',
             'priority' => 1,
+            'user_id' => $user->id
         ]);
 
         // Create new data
@@ -90,15 +92,19 @@ class TaskCrudTest extends TestCase
             'priority' => 2,
         ];
 
-        // Act: Send PUT request with new data
-        $response = $this->put("/api/task/{$task->id}", $updateData);
+        // Act: Send a PUT request with new data by the authenticated user
+        $response = $this->actingAs($user)->put("/api/task/{$task->id}", $updateData);
 
         // Assert: Check response status, content, and the task in database
         $response->assertStatus(200);
         $response->assertJsonFragment(['title' => 'New Title']);
-        $this->assertDatabaseHas('tasks', $updateData);
+        $this->assertDatabaseHas('tasks', [
+            'user_id' => $user->id,
+            'title' => 'New Title',
+            'description' => 'New description',
+            'priority' => 2
+        ]);
     }
-
 
     /**
      * Test that a user can view one task by id.
