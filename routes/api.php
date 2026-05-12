@@ -36,6 +36,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
      * API Route: Update a task
      */
     Route::put('/task/{id}', [TaskController::class, 'update']);
+
+    /**
+     * API Route: View a task
+     */
+    Route::get('/task/{id}', [TaskController::class, 'show']);
 });
 
 
@@ -44,11 +49,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
  */
 Route::get('/tasks', [TaskController::class, 'index']);
 
-
-/**
- * API Route: View a task
- */
-Route::get('/task/{id}', [TaskController::class, 'show']);
 
 /**
  * API Route: Delete a task

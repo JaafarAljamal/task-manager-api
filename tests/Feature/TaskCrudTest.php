@@ -10,6 +10,7 @@ use Tests\TestCase;
 class TaskCrudTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * A basic feature test example.
      */
@@ -22,14 +23,12 @@ class TaskCrudTest extends TestCase
 
     /**
      * Test that a user can create a new task.
-     * 
-     * @return void
      */
     public function test_user_can_create_a_task(): void
     {
         // Arrange: Create a sample user and Prepare valid task data
         $user = User::factory()->create();
-        $taskData =  [
+        $taskData = [
             'title' => 'Test Task',
             'description' => 'This is a test description',
             'priority' => 1,
@@ -45,19 +44,17 @@ class TaskCrudTest extends TestCase
             'user_id' => $user->id,
             'title' => 'Test Task',
             'description' => 'This is a test description',
-            'priority' => 1
+            'priority' => 1,
         ]);
     }
 
     /**
      * Test that a user can view all stored tasks.
-     * 
-     * @return void
      */
     public function test_user_can_show_all_tasks(): void
     {
         // Arrange: Create sample tasks
-        $tasks = \App\Models\Task::factory()->count(3)->create();
+        $tasks = Task::factory()->count(3)->create();
 
         // Act: Send GET request to fetch all tasks
         $response = $this->get('/api/tasks');
@@ -71,8 +68,6 @@ class TaskCrudTest extends TestCase
 
     /**
      * Test that a user can update a task by id.
-     * 
-     * @return void
      */
     public function test_user_can_update_a_task(): void
     {
@@ -82,7 +77,7 @@ class TaskCrudTest extends TestCase
             'title' => 'Old Title',
             'description' => 'Old description',
             'priority' => 1,
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
 
         // Create new data
@@ -102,26 +97,26 @@ class TaskCrudTest extends TestCase
             'user_id' => $user->id,
             'title' => 'New Title',
             'description' => 'New description',
-            'priority' => 2
+            'priority' => 2,
         ]);
     }
 
     /**
      * Test that a user can view one task by id.
-     * 
-     * @return void
      */
     public function test_user_can_show_a_task(): void
     {
-        // Arrange: Create a sample task
+        // Arrange: Create a sample user and an associated task
+        $user = User::factory()->create();
         $task = Task::factory()->create([
             'title' => 'Sample Title',
             'description' => 'Sample description',
             'priority' => 1,
+            'user_id' => $user->id,
         ]);
 
-        // Act: Send GET method to fetch a task
-        $response = $this->get("/api/task/{$task->id}");
+        // Act: Send GET method to fetch a task by the authenticated user
+        $response = $this->actingAs($user)->get("/api/task/{$task->id}");
 
         // Assert: Check response status and content
         $response->assertStatus(200);
@@ -134,8 +129,6 @@ class TaskCrudTest extends TestCase
 
     /**
      * Test that a user can delete a task by id.
-     * 
-     * @return void
      */
     public function test_user_can_delete_a_task(): void
     {
@@ -153,8 +146,6 @@ class TaskCrudTest extends TestCase
 
     /**
      * Test the ability to view all user-associated tasks using the user ID.
-     * 
-     * @return void
      */
     public function test_user_can_view_all_associated_tasks(): void
     {
@@ -164,19 +155,19 @@ class TaskCrudTest extends TestCase
             'user_id' => $user->id,
             'title' => 'First Task',
             'description' => 'This description for the first task',
-            'priority' => 1
+            'priority' => 1,
         ]);
         $task2 = Task::create([
             'user_id' => $user->id,
             'title' => 'Second Task',
             'description' => 'This description for the second task',
-            'priority' => 2
+            'priority' => 2,
         ]);
         $task3 = Task::create([
             'user_id' => $user->id,
             'title' => 'Third Task',
             'description' => 'This description for the third task',
-            'priority' => 3
+            'priority' => 3,
         ]);
 
         // Act: Send GET request to fetch all the user-associated tasks
@@ -191,8 +182,6 @@ class TaskCrudTest extends TestCase
 
     /**
      * Test the ability to display the task-associated user by Task ID.
-     * 
-     * @return void
      */
     public function test_user_can_view_the_user_associated_with_task(): void
     {
@@ -200,13 +189,13 @@ class TaskCrudTest extends TestCase
         $user = User::create([
             'name' => 'Jaafar',
             'email' => 'jaafar@example.com',
-            'password' => bcrypt('123123123')
+            'password' => bcrypt('123123123'),
         ]);
 
         $task = Task::create([
             'user_id' => $user->id,
             'title' => 'Task Title',
-            'priority' => 1
+            'priority' => 1,
         ]);
 
         // Act: Send GET request to fetch the task-associated user
