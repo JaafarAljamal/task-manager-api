@@ -128,15 +128,17 @@ class TaskCrudTest extends TestCase
     }
 
     /**
-     * Test that a user can delete a task by id.
+     * Test that a user can delete a task by ID.
      */
     public function test_user_can_delete_a_task(): void
     {
-        // Arrange: Create a sample task
-        $task = Task::factory()->create();
+        // Arrange: Create a sample user and an associated task
+        /** @var User $user */
+        $user = User::factory()->create();
+        $task = Task::factory()->create(['user_id' => $user->id]);
 
-        // Act: Send DELETE request to delete a task by id
-        $response = $this->delete("/api/task/{$task->id}");
+        // Act: Send a DELETE request to delete a task by ID by the authenticated user
+        $response = $this->actingAs($user)->delete("/api/task/{$task->id}");
 
         // Assert: Check response status and database content
         $response->assertStatus(204);
