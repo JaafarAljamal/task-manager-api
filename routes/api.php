@@ -41,19 +41,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
      * API Route: View a task
      */
     Route::get('/task/{id}', [TaskController::class, 'show']);
-});
 
+    /**
+     * API Route: Delete a task
+     */
+    Route::delete('/task/{id}', [TaskController::class, 'destroy']);
+});
 
 /**
  * API Route: View all stored tasks
  */
 Route::get('/tasks', [TaskController::class, 'index']);
-
-
-/**
- * API Route: Delete a task
- */
-Route::delete('/task/{id}', [TaskController::class, 'destroy']);
 
 /**
  * API Route: Create a new profile

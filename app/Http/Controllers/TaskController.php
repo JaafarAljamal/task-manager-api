@@ -80,7 +80,11 @@ class TaskController extends Controller
      */
     public function destroy($id): JsonResponse
     {
+        $user_id = Auth::user()->id;
         $task = Task::findOrFail($id);
+        if ($task->user_id != $user_id) {
+            return response()->json(['message' => 'You cannot delete this task!'], 403);
+        }
         $task->delete();
 
         return response()->json(null, 204);
