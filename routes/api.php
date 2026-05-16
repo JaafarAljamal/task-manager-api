@@ -51,6 +51,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
      * API Route: View all the user-associated tasks
      */
     Route::get('/tasks', [TaskController::class, 'userTasks']);
+
+    /**
+     * API Route: Add categories to a task
+     */
+    Route::post('/task/{id}/categories', [TaskController::class, 'attachCategory']);
 });
 
 /**
@@ -77,11 +82,6 @@ Route::put('/profile/{user_id}', [ProfileController::class, 'update']);
  * API Route: View the task-associated user
  */
 Route::get('task/{id}/user', [TaskController::class, 'taskUser']);
-
-/**
- * API Route: Add categories to a task
- */
-Route::post('/task/{id}/categories', [TaskController::class, 'attachCategory']);
 
 /**
  * API Route: View the categories-attached to a task

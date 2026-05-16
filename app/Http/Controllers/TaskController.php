@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AttachCategoryRequest;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
@@ -115,14 +115,15 @@ class TaskController extends Controller
 
     /**
      * Attach categories to a task by task ID and return a JSON response with status 200 OK.
-     *
-     * @param  Illuminate\Http\Request  $request
-     * @param  int  $id
      */
-    public function attachCategory(Request $request, $id): JsonResponse
+    public function attachCategory(AttachCategoryRequest $request, int $id): JsonResponse
     {
+        $user_id = Auth::user()->id;
         $task = Task::findOrFail($id);
-        $task->categories()->attach($request->category_id);
+        if ($task->user_id != $user_id) {
+            return response()->json(['message' => 'You cannot do this action!'], 403);
+        }
+        $task->categories()->syncWithoutDetaching($request->category_id);
 
         return response()->json(['message' => 'Category(s) attached successfully'], 200);
     }
