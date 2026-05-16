@@ -11,6 +11,7 @@ use Tests\TestCase;
 class TaskCategoryRelationshipTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * A basic feature test example.
      */
@@ -23,19 +24,18 @@ class TaskCategoryRelationshipTest extends TestCase
 
     /**
      * Test that a user can attach a category to a task by task ID.
-     * 
-     * @return void
      */
     public function test_user_can_add_categories_to_a_task(): void
     {
-        // Arrange: Create a user-associated task and a category 
+        // Arrange: Create a user-associated task and a category
+        /** @var User $user */
         $user = User::factory()->create();
         $task = Task::factory()->create(['user_id' => $user->id]);
         $category = Category::create(['name' => 'Category 1']);
 
-        // Act: Send a POST request to attach the category to the task
-        $response = $this->post("/api/task/{$task->id}/categories", [
-            'category_id' => $category->id
+        // Act: Send a POST request to attach a category to a task by an autenticated user
+        $response = $this->actingAs($user)->post("/api/task/{$task->id}/categories", [
+            'category_id' => $category->id,
         ]);
 
         // Assert: Check response status and content and database content
@@ -43,14 +43,12 @@ class TaskCategoryRelationshipTest extends TestCase
         $response->assertJsonFragment(['message' => 'Category(s) attached successfully']);
         $this->assertDatabaseHas('task_category', [
             'task_id' => $task->id,
-            'category_id' => $category->id
+            'category_id' => $category->id,
         ]);
     }
 
     /**
      * Test that the user can display the attached categories to the given task by the task ID.
-     * 
-     * @return void
      */
     public function test_user_can_view_the_attached_categories_of_a_task(): void
     {
@@ -69,8 +67,6 @@ class TaskCategoryRelationshipTest extends TestCase
 
     /**
      * Test that the user can display the tasks for the given category by the category ID.
-     * 
-     * @return void
      */
     public function test_user_can_view_tasks_for_a_specific_category(): void
     {
