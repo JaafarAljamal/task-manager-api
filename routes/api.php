@@ -46,12 +46,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
      * API Route: Delete a task
      */
     Route::delete('/task/{id}', [TaskController::class, 'destroy']);
+
+    /**
+     * API Route: View all the user-associated tasks
+     */
+    Route::get('/tasks', [TaskController::class, 'userTasks']);
 });
 
 /**
  * API Route: View all stored tasks
  */
-Route::get('/tasks', [TaskController::class, 'index']);
+Route::get('/admin/tasks', [TaskController::class, 'index']);
 
 /**
  * API Route: Create a new profile
@@ -67,11 +72,6 @@ Route::get('/profile/{user_id}', [ProfileController::class, 'show']);
  * API Route: Update an associated profile
  */
 Route::put('/profile/{user_id}', [ProfileController::class, 'update']);
-
-/**
- * API Route: View all the user-associated tasks
- */
-Route::get('user/{user_id}/tasks', [TaskController::class, 'userTasks']);
 
 /**
  * API Route: View the task-associated user

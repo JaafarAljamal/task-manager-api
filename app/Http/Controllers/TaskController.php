@@ -91,14 +91,12 @@ class TaskController extends Controller
     }
 
     /**
-     * Display the user-associated tasks in storage by user ID and return a JSON response
+     * Display the user-associated tasks in storage by authenticated user ID and return a JSON response
      * with status 200 OK.
-     *
-     * @param  int  $user_id
      */
-    public function userTasks($user_id): JsonResponse
+    public function userTasks(): JsonResponse
     {
-        $tasks = User::findOrFail($user_id)->tasks;
+        $tasks = Auth::user()->tasks;
 
         return response()->json($tasks, 200);
     }
