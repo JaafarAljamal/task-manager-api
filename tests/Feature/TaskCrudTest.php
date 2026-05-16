@@ -57,7 +57,7 @@ class TaskCrudTest extends TestCase
         $tasks = Task::factory()->count(3)->create();
 
         // Act: Send GET request to fetch all tasks
-        $response = $this->get('/api/tasks');
+        $response = $this->get('/api/admin/tasks');
 
         // Assert: Check response status and content
         $response->assertStatus(200);
@@ -152,6 +152,7 @@ class TaskCrudTest extends TestCase
     public function test_user_can_view_all_associated_tasks(): void
     {
         // Arrange: Create a sample user and some associated tasks
+        /** @var User $user */
         $user = User::factory()->create();
         $task1 = Task::create([
             'user_id' => $user->id,
@@ -172,8 +173,8 @@ class TaskCrudTest extends TestCase
             'priority' => 3,
         ]);
 
-        // Act: Send GET request to fetch all the user-associated tasks
-        $response = $this->get("/api/user/{$user->id}/tasks");
+        // Act: Send a GET request to fetch all the user-associated tasks by the authenticated user
+        $response = $this->actingAs($user)->get('/api/tasks');
 
         // Assert: Check response status and content
         $response->assertStatus(200);
