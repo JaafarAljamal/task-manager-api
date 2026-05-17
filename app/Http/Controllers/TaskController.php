@@ -129,14 +129,11 @@ class TaskController extends Controller
     }
 
     /**
-     * Display the task-attached categories for the given task ID and return
-     * a JSON response with status 200 OK.
-     *
-     * @param  int  $id
+     * Return categories attached to the authenticated user's task.
      */
-    public function getTaskCategories($id): JsonResponse
+    public function getTaskCategories(int $id): JsonResponse
     {
-        $task = Task::findOrFail($id);
+        $task = Auth::user()->tasks()->findOrFail($id);
         $categories = $task->categories;
 
         return response()->json($categories, 200);
