@@ -52,13 +52,15 @@ class TaskCategoryRelationshipTest extends TestCase
      */
     public function test_user_can_view_the_attached_categories_of_a_task(): void
     {
-        // Arrange: Create a category-attached task
-        $task = Task::factory()->create();
+        // Arrange: Create a category-attached task with the associated user
+        /** @var User $user */
+        $user = User::factory()->create();
+        $task = Task::factory()->create(['user_id' => $user->id]);
         $category = Category::create(['name' => 'Category_1']);
         $task->categories()->attach($category->id);
 
         // Act: Send a GET request to fetch the categories attached to the task by its ID
-        $response = $this->get("/api/task/{$task->id}/categories");
+        $response = $this->actingAs($user)->get("/api/task/{$task->id}/categories");
 
         // Assert: Check response status and content
         $response->assertStatus(200);
