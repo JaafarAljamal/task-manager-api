@@ -52,19 +52,20 @@ class UserProfileRelationshipTest extends TestCase
     }
 
     /**
-     * Test that a user can view the associated profile.
+     * Test that an authenticated user can view the associated profile.
      */
     public function test_user_can_view_associated_profile(): void
     {
         // Arrange: Create a user in database
+        /** @var User $user */
         $user = User::factory()->create();
         $profile = Profile::create([
             'user_id' => $user->id,
             'phone' => '123456789',
         ]);
 
-        // Act: Send Get request to fetch the user's associated profile
-        $response = $this->get("/api/profile/{$user->id}");
+        // Act: Send Get request to fetch the user's associated profile by the authenticated user
+        $response = $this->actingAs($user)->get('/api/profile');
 
         // Assert: Check the response status and content
         $response->assertStatus(200);
