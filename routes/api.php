@@ -61,17 +61,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
      * API Route: View the categories-attached to a task
      */
     Route::get('/task/{id}/categories', [TaskController::class, 'getTaskCategories']);
+
+    /**
+     * API Route: Create a new profile
+     */
+    Route::post('/profile', [ProfileController::class, 'store']);
 });
 
 /**
  * API Route: View all stored tasks
  */
 Route::get('/admin/tasks', [TaskController::class, 'index']);
-
-/**
- * API Route: Create a new profile
- */
-Route::post('/profile', [ProfileController::class, 'store']);
 
 /**
  * API Route: View an associated profile
