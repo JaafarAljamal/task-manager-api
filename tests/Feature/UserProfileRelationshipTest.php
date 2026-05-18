@@ -78,6 +78,7 @@ class UserProfileRelationshipTest extends TestCase
     public function test_user_can_update_associated_profile(): void
     {
         // Arrange: Create a sample user, an associated profile, and new profile data
+        /** @var User $user */
         $user = User::factory()->create();
         $profile = Profile::create([
             'user_id' => $user->id,
@@ -86,19 +87,19 @@ class UserProfileRelationshipTest extends TestCase
             'date_of_birth' => '2026-04-23',
             'bio' => 'Software Engineer.',
         ]);
-        $updateDate = [
+        $updateData = [
             'phone' => '0123456789',
             'address' => 'New address',
             'date_of_birth' => '2025-04-24',
             'bio' => 'Back-End Developer.',
         ];
 
-        // Act: Send PUT request with new data
-        $response = $this->put("/api/profile/{$user->id}", $updateDate);
+        // Act: Send PUT request with new data by the authenticated user
+        $response = $this->actingAs($user)->put('/api/profile', $updateData);
 
         // Assert: Check response status, content, and the profile in database
         $response->assertStatus(200);
         $response->assertJsonFragment(['phone' => '0123456789']);
-        $this->assertDatabaseHas('profiles', $updateDate);
+        $this->assertDatabaseHas('profiles', $updateData);
     }
 }
