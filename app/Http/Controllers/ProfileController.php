@@ -44,14 +44,12 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update the user's profile by user ID and return a JSON response with status 200 OK.
-     *
-     * @param  App\Http\Requests\UpdateProfileRequest  $request
-     * @param  int  $user_id
+     * Update the authenticated user's profile.
+     * Returns 200 OK with updated profile data or 404 if not found.
      */
-    public function update(UpdateProfileRequest $request, $user_id): JsonResponse
+    public function update(UpdateProfileRequest $request): JsonResponse
     {
-        $profile = User::findOrFail($user_id)->profile;
+        $profile = Auth::user()->profile;
 
         if (! $profile) {
             return response()->json(['message' => 'Profile not found'], 404);

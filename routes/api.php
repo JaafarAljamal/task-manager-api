@@ -71,17 +71,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
      * API Route: View an associated profile
      */
     Route::get('/profile', [ProfileController::class, 'show']);
+
+    /**
+     * API Route: Update an associated profile
+     */
+    Route::put('/profile', [ProfileController::class, 'update']);
 });
 
 /**
  * API Route: View all stored tasks
  */
 Route::get('/admin/tasks', [TaskController::class, 'index']);
-
-/**
- * API Route: Update an associated profile
- */
-Route::put('/profile/{user_id}', [ProfileController::class, 'update']);
 
 /**
  * API Route: View the task-associated user
