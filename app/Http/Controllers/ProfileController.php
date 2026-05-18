@@ -13,7 +13,7 @@ class ProfileController extends Controller
 {
     /**
      * Create a profile for the authenticated user.
-     * Returns 201 Created with the profile data.
+     * Returns 201 Created with the profile data or 409 if profile already exists.
      */
     public function store(StoreProfileRequest $request): JsonResponse
     {
@@ -29,14 +29,12 @@ class ProfileController extends Controller
     }
 
     /**
-     * Display the user's profile by user ID and return a JSON response with status 200 OK.
-     *
-     * @param  int  $user_id
+     * Show the authenticated user's profile.
+     * Returns 200 OK with profile data or 404 if not found.
      */
-    public function show($user_id): JsonResponse
+    public function show(): JsonResponse
     {
-        $user = User::findOrFail($user_id);
-        $profile = $user->profile;
+        $profile = Auth::user()->profile;
 
         if (! $profile) {
             return response()->json(['message' => 'Profile not found'], 404);

@@ -66,17 +66,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
      * API Route: Create a new profile
      */
     Route::post('/profile', [ProfileController::class, 'store']);
+
+    /**
+     * API Route: View an associated profile
+     */
+    Route::get('/profile', [ProfileController::class, 'show']);
 });
 
 /**
  * API Route: View all stored tasks
  */
 Route::get('/admin/tasks', [TaskController::class, 'index']);
-
-/**
- * API Route: View an associated profile
- */
-Route::get('/profile/{user_id}', [ProfileController::class, 'show']);
 
 /**
  * API Route: Update an associated profile
