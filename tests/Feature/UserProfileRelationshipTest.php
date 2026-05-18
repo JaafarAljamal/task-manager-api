@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class UserProfileRelationshipTest extends TestCase
@@ -24,12 +23,11 @@ class UserProfileRelationshipTest extends TestCase
 
     /**
      * Test that a user can create the associated profile.
-     * 
-     * @return void
      */
     public function test_user_can_create_a_profile(): void
     {
         // Arrange: Create a user and a profile in data base
+        /** @var User $user */
         $user = User::factory()->create();
 
         $profileData = [
@@ -40,8 +38,8 @@ class UserProfileRelationshipTest extends TestCase
             'bio' => 'Software Engineer.',
         ];
 
-        // Act: Send POST request to create a profile
-        $response = $this->post('/api/profile', $profileData);
+        // Act: Send a POST request to create a profile by the authenticated user
+        $response = $this->actingAs($user)->post('/api/profile', $profileData);
 
         // Assert: Check response status and content
         $response->assertStatus(201);
@@ -49,14 +47,12 @@ class UserProfileRelationshipTest extends TestCase
         $response->assertJsonFragment(['phone' => '123456789']);
         $this->assertDatabaseHas('profiles', [
             'user_id' => $user->id,
-            'phone' => '123456789'
+            'phone' => '123456789',
         ]);
     }
 
     /**
      * Test that a user can view the associated profile.
-     * 
-     * @return void
      */
     public function test_user_can_view_associated_profile(): void
     {
@@ -64,7 +60,7 @@ class UserProfileRelationshipTest extends TestCase
         $user = User::factory()->create();
         $profile = Profile::create([
             'user_id' => $user->id,
-            'phone' => '123456789'
+            'phone' => '123456789',
         ]);
 
         // Act: Send Get request to fetch the user's associated profile
@@ -77,8 +73,6 @@ class UserProfileRelationshipTest extends TestCase
 
     /**
      * Test that a user can update the associated profile by user ID.
-     * 
-     * @return void
      */
     public function test_user_can_update_associated_profile(): void
     {
@@ -89,7 +83,7 @@ class UserProfileRelationshipTest extends TestCase
             'phone' => '123456789',
             'address' => 'Test address',
             'date_of_birth' => '2026-04-23',
-            'bio' => 'Software Engineer.'
+            'bio' => 'Software Engineer.',
         ]);
         $updateDate = [
             'phone' => '0123456789',
