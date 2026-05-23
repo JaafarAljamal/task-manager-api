@@ -68,17 +68,19 @@ class TaskCategoryRelationshipTest extends TestCase
     }
 
     /**
-     * Test that the user can display the tasks for the given category by the category ID.
+     * Test that the admin can display the tasks for the given category by the category ID.
      */
-    public function test_user_can_view_tasks_for_a_specific_category(): void
+    public function test_admin_can_view_tasks_for_a_specific_category(): void
     {
-        // Arrange: Create a category-attached task
+        // Arrange: Create an admin and category-attached task
+        /** @var User $admin */
+        $admin = User::factory()->create(['role' => 'admin']);
         $task = Task::factory()->create(['title' => 'Task Title']);
         $category = Category::create(['name' => 'Category_1']);
         $task->categories()->attach($category->id);
 
         // Act: Send GET request to fetch the related tasks
-        $response = $this->get("/api/category/{$category->id}/tasks");
+        $response = $this->actingAs($admin)->get("/api/category/{$category->id}/tasks");
 
         // Assert: Check response status and content
         $response->assertStatus(200);
