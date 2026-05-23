@@ -188,28 +188,22 @@ class TaskCrudTest extends TestCase
     }
 
     /**
-     * Test the ability to display the task-associated user by Task ID.
+     * est the ability to display the task-associated user via the Task ID by the admin.
      */
     public function test_user_can_view_the_user_associated_with_task(): void
     {
-        // Arrange: Create a user and an associated task
-        $user = User::create([
-            'name' => 'Jaafar',
-            'email' => 'jaafar@example.com',
-            'password' => bcrypt('123123123'),
-        ]);
+        // Arrange: Create an admin, a user, and a user-associated task
+        /** @var User $admin */
+        $admin = User::factory()->create(['role' => 'admin']);
+        $user = User::factory()->create();
 
-        $task = Task::create([
-            'user_id' => $user->id,
-            'title' => 'Task Title',
-            'priority' => 1,
-        ]);
+        $task = Task::factory()->create(['user_id' => $user->id]);
 
         // Act: Send GET request to fetch the task-associated user
-        $response = $this->get("/api/task/{$task->id}/user");
+        $response = $this->actingAs($admin)->get("/api/task/{$task->id}/user");
 
         // Assert: Check response status and content
         $response->assertStatus(200);
-        $response->assertJsonFragment(['name' => 'Jaafar']);
+        $response->assertJsonFragment(['name' => $user->name]);
     }
 }
