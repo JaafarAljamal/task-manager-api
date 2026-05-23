@@ -29,10 +29,17 @@ Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanc
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::middleware(['checkUser'])->group(function () {
+
         /**
          * API Route: View all stored tasks
          */
         Route::get('/admin/tasks', [TaskController::class, 'index']);
+
+        /**
+         * API Route: View the task-associated user
+         */
+        Route::get('task/{id}/user', [TaskController::class, 'taskUser']);
+
     });
 
     /**
@@ -85,11 +92,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
      */
     Route::put('/profile', [ProfileController::class, 'update']);
 });
-
-/**
- * API Route: View the task-associated user
- */
-Route::get('task/{id}/user', [TaskController::class, 'taskUser']);
 
 /**
  * API Route: View the tasks associated to a category

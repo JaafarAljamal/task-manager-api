@@ -103,10 +103,8 @@ class TaskController extends Controller
 
     /**
      * Display task-associated user by task ID and return a JSON response with status 200 OK.
-     *
-     * @param  int  $id
      */
-    public function taskUser($id): JsonResponse
+    public function taskUser(int $id): JsonResponse
     {
         $user = Task::findOrFail($id)->user;
 
