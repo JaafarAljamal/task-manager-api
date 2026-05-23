@@ -51,13 +51,17 @@ class TaskCrudTest extends TestCase
     /**
      * Test that a user can view all stored tasks.
      */
-    public function test_user_can_show_all_tasks(): void
+    public function test_admin_can_show_all_tasks(): void
     {
         // Arrange: Create sample tasks
+        /** @var User $admin */
+        $admin = User::factory()->create([
+            'role' => 'admin',
+        ]);
         $tasks = Task::factory()->count(3)->create();
 
         // Act: Send GET request to fetch all tasks
-        $response = $this->get('/api/admin/tasks');
+        $response = $this->actingAs($admin)->get('/api/admin/tasks');
 
         // Assert: Check response status and content
         $response->assertStatus(200);
