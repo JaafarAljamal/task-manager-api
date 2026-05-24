@@ -4,21 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
     /**
-     * Display the category-associated tasks for the given category ID and return 
-     * a JSON response with status 200 OK.
-     * 
-     * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * Show all tasks associated with a given category ID.
+     * Returns 200 OK with tasks list or 404 if no tasks attached with category.
      */
-    public function getCategoryTasks($id): JsonResponse
+    public function getCategoryTasks(int $id): JsonResponse
     {
         $category = Category::findOrFail($id);
         $tasks = $category->tasks;
+
+        if ($category->tasks->isEmpty()) {
+            return response()->json(['message' => 'No tasks found for this category'], 404);
+        }
+
         return response()->json($tasks, 200);
     }
 }
