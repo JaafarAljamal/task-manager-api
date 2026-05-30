@@ -31,8 +31,6 @@ class StoreTaskRequest extends FormRequest
 
     /**
      * Function to customize validation messages.
-     * 
-     * @return array
      */
     public function messages(): array
     {
