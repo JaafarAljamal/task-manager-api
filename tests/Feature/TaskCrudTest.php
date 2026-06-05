@@ -191,7 +191,7 @@ class TaskCrudTest extends TestCase
     }
 
     /**
-     * est the ability to display the task-associated user via the Task ID by the admin.
+     * Test the ability to display the task-associated user via the Task ID by the admin.
      */
     public function test_user_can_view_the_user_associated_with_task(): void
     {
@@ -208,5 +208,27 @@ class TaskCrudTest extends TestCase
         // Assert: Check response status and content
         $response->assertStatus(200);
         $response->assertJsonFragment(['name' => $user->name]);
+    }
+
+    /**
+     * Test that a user can view all their associated tasks ordered by priority.
+     * Ensures tasks are returned in the correct order (high → medium → low).
+     */
+    public function test_user_can_view_all_associated_tasks_by_priority_order(): void
+    {
+        // Arrange: Prepare a user and some associated tasks
+        /** @var User $user */
+        $user = User::factory()->create();
+        Task::factory()->create(['user_id' => $user->id, 'priority' => 'low']);
+        Task::factory()->create(['user_id' => $user->id, 'priority' => 'medium']);
+        Task::factory()->create(['user_id' => $user->id, 'priority' => 'high']);
+
+        // Act: Send a GET request to fetch all the user-associated tasks by the authenticated user
+        $response = $this->actingAs($user)->get('/api/tasks/ordered');
+
+        // Assert: Check response status and content
+        $response->assertStatus(200);
+        $responseData = $response->json();
+        $this->assertEquals(['high', 'medium', 'low'], array_column($responseData, 'priority'));
     }
 }
