@@ -25,7 +25,7 @@ class UpdateTaskRequest extends FormRequest
         return [
             'title' => 'sometimes|string|max:40',
             'description' => 'sometimes|nullable|string',
-            'priority' => 'sometimes|integer|between:1,5',
+            'priority' => 'sometimes|in:high,medium,low',
         ];
     }
 
@@ -36,9 +36,7 @@ class UpdateTaskRequest extends FormRequest
     {
         return [
             'title.max' => 'The entered title exceeds the allowed length, which is 40 characters',
-            'priority.integer' => 'Priority must be an integer between 1 and 5',
-            'priority.min' => 'Priority level must be from 1 to 5',
-            'priority.max' => 'Priority level must be from 1 to 5',
+            'priority.integer' => 'Priority must be an integer in high, medium, and low',
         ];
     }
 }

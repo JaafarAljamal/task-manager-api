@@ -25,7 +25,7 @@ class StoreTaskRequest extends FormRequest
         return [
             'title' => 'required|string|max:40',
             'description' => 'nullable|string',
-            'priority' => 'required|integer|min:1|max:5',
+            'priority' => 'required|in:high,medium,low',
         ];
     }
 
@@ -37,10 +37,7 @@ class StoreTaskRequest extends FormRequest
         return [
             'title.required' => 'The task you try to add needs a title',
             'title.max' => 'The entered title exceeds the allowed length, which is 40 characters',
-            'priority.required' => 'Set a priority level to the task you entered, between 1 and 5',
-            'priority.integer' => 'Priority must be an integer between 1 and 5',
-            'priority.min' => 'The priority level must be from 1 to 5',
-            'priority.max' => 'The priority level must be from 1 to 5',
+            'priority.required' => 'Set a priority level to the task you entered, in high, medium, and low',
         ];
     }
 }
