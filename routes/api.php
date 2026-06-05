@@ -73,6 +73,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/tasks', [TaskController::class, 'userTasks']);
 
     /**
+     * API Route: View all the user-associated tasks
+     */
+    Route::get('/tasks/ordered', [TaskController::class, 'getTasksByPriority']);
+
+    /**
      * API Route: Add categories to a task
      */
     Route::post('/task/{id}/categories', [TaskController::class, 'attachCategory']);

@@ -102,6 +102,20 @@ class TaskController extends Controller
     }
 
     /**
+     * Return all tasks for the authenticated user ordered by priority (high → medium → low).
+     */
+    public function getTasksByPriority(): JsonResponse
+    {
+        $tasks = Auth::user()->tasks()->orderByRaw("CASE priority 
+                WHEN 'high' THEN 1 
+                WHEN 'medium' THEN 2 
+                WHEN 'low' THEN 3 
+            END")->get();
+
+        return response()->json($tasks, 200);
+    }
+
+    /**
      * Display task-associated user by task ID and return a JSON response with status 200 OK.
      */
     public function taskUser(int $id): JsonResponse
