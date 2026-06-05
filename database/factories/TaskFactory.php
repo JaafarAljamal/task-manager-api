@@ -22,7 +22,7 @@ class TaskFactory extends Factory
             'user_id' => User::factory(),
             'title' => $this->faker->sentence,
             'description' => $this->faker->paragraph,
-            'priority' => $this->faker->numberBetween(1, 5),
+            'priority' => $this->faker->randomElement(['high', 'medium', 'low']),
         ];
     }
 }
