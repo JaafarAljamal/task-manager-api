@@ -27,11 +27,12 @@ class TaskCrudTest extends TestCase
     public function test_user_can_create_a_task(): void
     {
         // Arrange: Create a sample user and Prepare valid task data
+        /** @var User $user */
         $user = User::factory()->create();
         $taskData = [
             'title' => 'Test Task',
             'description' => 'This is a test description',
-            'priority' => 1,
+            'priority' => 'high',
         ];
 
         // Act: Send a POST request to create a new task by an authenticated user
@@ -44,7 +45,7 @@ class TaskCrudTest extends TestCase
             'user_id' => $user->id,
             'title' => 'Test Task',
             'description' => 'This is a test description',
-            'priority' => 1,
+            'priority' => 'high',
         ]);
     }
 
@@ -76,11 +77,12 @@ class TaskCrudTest extends TestCase
     public function test_user_can_update_a_task(): void
     {
         // Arrange: Create a sample user and an associated task
+        /** @var User $user */
         $user = User::factory()->create();
         $task = Task::factory()->create([
             'title' => 'Old Title',
             'description' => 'Old description',
-            'priority' => 1,
+            'priority' => 'high',
             'user_id' => $user->id,
         ]);
 
@@ -88,7 +90,7 @@ class TaskCrudTest extends TestCase
         $updateData = [
             'title' => 'New Title',
             'description' => 'New description',
-            'priority' => 2,
+            'priority' => 'medium',
         ];
 
         // Act: Send a PUT request with new data by the authenticated user
@@ -101,7 +103,7 @@ class TaskCrudTest extends TestCase
             'user_id' => $user->id,
             'title' => 'New Title',
             'description' => 'New description',
-            'priority' => 2,
+            'priority' => 'medium',
         ]);
     }
 
@@ -111,11 +113,12 @@ class TaskCrudTest extends TestCase
     public function test_user_can_show_a_task(): void
     {
         // Arrange: Create a sample user and an associated task
+        /** @var User $user */
         $user = User::factory()->create();
         $task = Task::factory()->create([
             'title' => 'Sample Title',
             'description' => 'Sample description',
-            'priority' => 1,
+            'priority' => 'high',
             'user_id' => $user->id,
         ]);
 
@@ -127,7 +130,7 @@ class TaskCrudTest extends TestCase
         $response->assertJsonFragment([
             'title' => 'Sample Title',
             'description' => 'Sample description',
-            'priority' => 1,
+            'priority' => 'high',
         ]);
     }
 
@@ -162,19 +165,19 @@ class TaskCrudTest extends TestCase
             'user_id' => $user->id,
             'title' => 'First Task',
             'description' => 'This description for the first task',
-            'priority' => 1,
+            'priority' => 'high',
         ]);
         $task2 = Task::create([
             'user_id' => $user->id,
             'title' => 'Second Task',
             'description' => 'This description for the second task',
-            'priority' => 2,
+            'priority' => 'medium',
         ]);
         $task3 = Task::create([
             'user_id' => $user->id,
             'title' => 'Third Task',
             'description' => 'This description for the third task',
-            'priority' => 3,
+            'priority' => 'low',
         ]);
 
         // Act: Send a GET request to fetch all the user-associated tasks by the authenticated user
