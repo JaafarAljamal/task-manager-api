@@ -65,4 +65,25 @@ class FavoriteTaskRelationshipTest extends TestCase
             'task_id' => $task->id,
         ]);
     }
+
+    /**
+     * Test that authenticated users can show their favorite tasks
+     */
+    public function test_user_can_show_their_favorite_tasks(): void
+    {
+        // Arrange: Create a user and a task in favorites
+        /** @var User $user */
+        $user = User::factory()->create();
+        $task = Task::factory()->create();
+        $user->favoriteTasks()->syncWithoutDetaching($task->id);
+
+        // Act: Send a Get request to fetch favorite tasks
+        $response = $this->actingAs($user)->get('/api/tasks/favorite');
+
+        // Assert: Check the responser status and content
+        $response->assertStatus(200);
+        $response->assertJsonFragment(['title' => $task->title]);
+        $response->assertJsonFragment(['description' => $task->description]);
+        $response->assertJsonFragment(['priority' => $task->priority]);
+    }
 }
