@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\TaskFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,13 +25,11 @@ class Task extends Model
         'user_id',
         'title',
         'description',
-        'priority'
+        'priority',
     ];
 
     /**
      * Get the user associated with the task.
-     * 
-     * @return BelongsTo
      */
     public function user(): BelongsTo
     {
@@ -39,11 +38,17 @@ class Task extends Model
 
     /**
      * Get the category(s) associated with the task.
-     * 
-     * @return BelongsToMany
      */
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'task_category');
+    }
+
+    /**
+     * Get the users who favored the task.
+     */
+    public function favoriteByUser(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'favorites');
     }
 }

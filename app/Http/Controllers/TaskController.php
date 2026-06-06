@@ -56,10 +56,8 @@ class TaskController extends Controller
 
     /**
      * Display a stored task in storage by ID and return a JSON response with status 200 OK.
-     *
-     * @param  int  $id
      */
-    public function show($id): JsonResponse
+    public function show(int $id): JsonResponse
     {
         $user_id = Auth::user()->id;
 
@@ -75,10 +73,8 @@ class TaskController extends Controller
     /**
      * Delete a stored task in storage by ID and return a JSON response
      * with status 204 No Content.
-     *
-     * @param  int  $id
      */
-    public function destroy($id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         $user_id = Auth::user()->id;
         $task = Task::findOrFail($id);
@@ -149,5 +145,18 @@ class TaskController extends Controller
         $categories = $task->categories;
 
         return response()->json($categories, 200);
+    }
+
+    /**
+     * Add a task to favorites by task ID and return a JSON response with status 200 OK.
+     */
+    public function addToFavorites(int $id): JsonResponse
+    {
+        if (Auth::user()->favoriteTasks()->where('task_id', $id)->exists()) {
+            return response()->json(['message' => 'Already in favorites'], 409);
+        }
+        Auth::user()->favoriteTasks()->syncWithoutDetaching($id);
+
+        return response()->json(['message' => 'The task is added to favorites successfully!'], 200);
     }
 }

@@ -101,4 +101,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
      * API Route: Update an associated profile
      */
     Route::put('/profile', [ProfileController::class, 'update']);
+
+    /**
+     * API Route: Add a task to favorites
+     */
+    Route::post('/tasks/{id}/favorite', [TaskController::class, 'addToFavorites']);
+
 });
