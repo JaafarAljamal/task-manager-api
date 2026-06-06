@@ -148,7 +148,8 @@ class TaskController extends Controller
     }
 
     /**
-     * Add a task to favorites by task ID and return a JSON response with status 200 OK.
+     * Add a task to favorites by task ID and return a JSON response with status 200 OK
+     * , or 409 if already exists.
      */
     public function addToFavorites(int $id): JsonResponse
     {
@@ -158,5 +159,19 @@ class TaskController extends Controller
         Auth::user()->favoriteTasks()->syncWithoutDetaching($id);
 
         return response()->json(['message' => 'The task is added to favorites successfully!'], 200);
+    }
+
+    /**
+     * Remove a task from the authenticated user's favorites.
+     * Returns 200 OK if removed, or 404 if not found.
+     */
+    public function removeFromFavorites(int $id): JsonResponse
+    {
+        if (! Auth::user()->favoriteTasks()->where('task_id', $id)->exists()) {
+            return response()->json(['message' => 'Task not found in favorites'], 404);
+        }
+        Auth::user()->favoriteTasks()->detach($id);
+
+        return response()->json(['message' => 'Task removed from favorites'], 200);
     }
 }

@@ -107,4 +107,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
      */
     Route::post('/tasks/{id}/favorite', [TaskController::class, 'addToFavorites']);
 
+    /**
+     * API Route: Remove a task from favorites
+     */
+    Route::delete('/tasks/{id}/favorite', [TaskController::class, 'removeFromFavorites']);
+
 });
