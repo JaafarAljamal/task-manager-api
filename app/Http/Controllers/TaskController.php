@@ -174,4 +174,19 @@ class TaskController extends Controller
 
         return response()->json(['message' => 'Task removed from favorites'], 200);
     }
+
+    /**
+     * Return all favorite tasks for the authenticated user.
+     * Returns 200 OK with tasks list or 404 if none exist.
+     */
+    public function getFavoriteTasks(): JsonResponse
+    {
+        $favTasks = Auth::user()->favoriteTasks;
+
+        if ($favTasks->isEmpty()) {
+            return response()->json(['message' => 'No tasks in favorites!'], 404);
+        }
+
+        return response()->json($favTasks, 200);
+    }
 }
