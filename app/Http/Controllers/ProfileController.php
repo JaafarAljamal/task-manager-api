@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProfileRequest;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Models\Profile;
-use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,9 +22,16 @@ class ProfileController extends Controller
         }
         $data = $request->validated();
         $data['user_id'] = $user->id;
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('my_photo', 'public');
+            $data['image'] = $path;
+        }
         $profile = Profile::create($data);
 
-        return response()->json($profile, 201);
+        return response()->json([
+            'message' => 'Profile created successfully',
+            'profile' => $profile,
+        ], 201);
     }
 
     /**

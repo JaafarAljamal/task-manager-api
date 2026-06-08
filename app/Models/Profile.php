@@ -20,13 +20,12 @@ class Profile extends Model
         'phone',
         'address',
         'date_of_birth',
-        'bio'
+        'bio',
+        'image',
     ];
 
     /**
      * Get the user associated with the profile.
-     * 
-     * @return BelongsTo
      */
     public function user(): BelongsTo
     {
