@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
 class UserProfileRelationshipTest extends TestCase
@@ -36,6 +37,7 @@ class UserProfileRelationshipTest extends TestCase
             'address' => 'Test address',
             'date_of_birth' => '2026-04-23',
             'bio' => 'Software Engineer.',
+            'image' => UploadedFile::fake()->image('image.jpg'),
         ];
 
         // Act: Send a POST request to create a profile by the authenticated user
@@ -49,6 +51,8 @@ class UserProfileRelationshipTest extends TestCase
             'user_id' => $user->id,
             'phone' => '123456789',
         ]);
+        $user->refresh();
+        $this->assertNotNull($user->profile->image);
     }
 
     /**
