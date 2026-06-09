@@ -65,9 +65,11 @@ class UserProfileRelationshipTest extends TestCase
         // Arrange: Create a user in database
         /** @var User $user */
         $user = User::factory()->create();
+        Storage::fake('public');
         $profile = Profile::create([
             'user_id' => $user->id,
             'phone' => '123456789',
+            'image' => UploadedFile::fake()->image('img.jpg'),
         ]);
 
         // Act: Send Get request to fetch the user's associated profile by the authenticated user
