@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateProfileRequest;
 use App\Models\Profile;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -55,13 +56,23 @@ class ProfileController extends Controller
      */
     public function update(UpdateProfileRequest $request): JsonResponse
     {
-        $profile = Auth::user()->profile;
+        $user = Auth::user();
+        $profile = $user->profile;
 
         if (! $profile) {
             return response()->json(['message' => 'Profile not found'], 404);
         }
 
         $data = $request->validated();
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('my_photo', 'public');
+            $oldImage = $profile->image;
+            if ($oldImage) {
+                Storage::disk('public')->delete($oldImage);
+            }
+
+            $data['image'] = $path;
+        }
         $profile->updateOrFail($data);
 
         return response()->json($profile, 200);
