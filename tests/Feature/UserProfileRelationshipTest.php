@@ -6,6 +6,7 @@ use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class UserProfileRelationshipTest extends TestCase
@@ -31,6 +32,7 @@ class UserProfileRelationshipTest extends TestCase
         /** @var User $user */
         $user = User::factory()->create();
 
+        Storage::fake('public');
         $profileData = [
             'user_id' => $user->id,
             'phone' => '123456789',
@@ -84,18 +86,21 @@ class UserProfileRelationshipTest extends TestCase
         // Arrange: Create a sample user, an associated profile, and new profile data
         /** @var User $user */
         $user = User::factory()->create();
+        Storage::fake('public');
         $profile = Profile::create([
             'user_id' => $user->id,
             'phone' => '123456789',
             'address' => 'Test address',
             'date_of_birth' => '2026-04-23',
             'bio' => 'Software Engineer.',
+            'image' => UploadedFile::fake()->image('old.jpg'),
         ]);
         $updateData = [
             'phone' => '0123456789',
             'address' => 'New address',
             'date_of_birth' => '2025-04-24',
             'bio' => 'Back-End Developer.',
+            'image' => UploadedFile::fake()->image('new.jpg'),
         ];
 
         // Act: Send PUT request with new data by the authenticated user
@@ -104,6 +109,12 @@ class UserProfileRelationshipTest extends TestCase
         // Assert: Check response status, content, and the profile in database
         $response->assertStatus(200);
         $response->assertJsonFragment(['phone' => '0123456789']);
-        $this->assertDatabaseHas('profiles', $updateData);
+        $this->assertDatabaseHas('profiles', [
+            'user_id' => $user->id,
+            'phone' => '0123456789',
+            'address' => 'New address',
+            'date_of_birth' => '2025-04-24',
+            'bio' => 'Back-End Developer.',
+        ]);
     }
 }
