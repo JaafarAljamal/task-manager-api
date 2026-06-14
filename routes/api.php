@@ -7,9 +7,9 @@ use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// Route::get('/user', function (Request $request) {
+//     return $request->user();
+// })->middleware('auth:sanctum');
 
 /**
  * API Route: Create a new user account
@@ -86,6 +86,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
      * API Route: View the categories-attached to a task
      */
     Route::get('/task/{id}/categories', [TaskController::class, 'getTaskCategories']);
+
+    /**
+     * API Route: Get user data
+     */
+    Route::get('/user', [UserController::class, 'getUser']);
 
     /**
      * API Route: Create a new profile
