@@ -119,4 +119,37 @@ class UserProfileRelationshipTest extends TestCase
             'bio' => 'Back-End Developer.',
         ]);
     }
+
+    /**
+     * Test that an authenticated user can viw their data
+     */
+    public function test_user_can_view_their_data(): void
+    {
+        // Arrange: Create a user and an associated profile
+        /** @var User $user */
+        $user = User::factory()->create();
+
+        Storage::fake('public');
+        $profile = Profile::create([
+            'user_id' => $user->id,
+            'phone' => '123456789',
+            'address' => 'Test address',
+            'date_of_birth' => '2026-04-23',
+            'bio' => 'Software Engineer.',
+            'image' => UploadedFile::fake()->image('image.jpg'),
+        ]);
+
+        // Act: Send a GET request to fetch the user data
+        $response = $this->actingAs($user)->get('/api/user');
+
+        // Assert: Check the response status and content
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'phone' => $profile->phone,
+            'address' => $profile->address,
+        ]);
+    }
 }
